@@ -3,7 +3,7 @@
 
 EAPI=8
 
-inherit cmake gnome2 greadme
+inherit cmake gnome2 greadme virtualx
 
 DESCRIPTION="Integrated mail, addressbook and calendaring functionality"
 HOMEPAGE="https://gitlab.gnome.org/GNOME/evolution/-/wikis/home https://gitlab.gnome.org/GNOME/evolution"
@@ -92,6 +92,7 @@ BDEPEND="
 # global scope PATCHES or DOCS array mustn't be used due to double default_src_prepare
 # call; if needed, set them after cmake_src_prepare call, if that works
 src_prepare() {
+	eapply "${FILESDIR}"/disable_test-web-view-jsc.patch
 	cmake_src_prepare
 	gnome2_src_prepare
 }
@@ -131,7 +132,8 @@ src_compile() {
 }
 
 src_test() {
-	cmake_src_test
+	gnome2_environment_reset
+	virtx cmake_src_test
 }
 
 src_install() {
